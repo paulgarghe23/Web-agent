@@ -1,2 +1,24 @@
-﻿__pycache__/
+﻿# Python / Poetry
+__pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.env
+.env
+.venv/
+.poetry/
+poetry.lock
+*.egg-info/
+
+# VSCode / IDE
+.vscode/
+.idea/
+
+# Local data and artifacts
+data/
+*.csv
+*.xlsx
+*.pdf
+
+# Tests cache
+.pytest_cache/
