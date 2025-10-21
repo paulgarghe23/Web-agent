@@ -1,14 +1,19 @@
 from openai import OpenAI
 import os
+from dotenv import load_dotenv
+
+# Cargar .env
+load_dotenv()
 
 _client = None
 
 def _get_client() -> OpenAI:
     global _client
     if _client is None:
-        if not os.getenv("OPENAI_API_KEY"):
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
             raise RuntimeError("OPENAI_API_KEY is not set")
-        _client = OpenAI()
+        _client = OpenAI(api_key=api_key)
     return _client
 
 def llm_generate(context: str, question: str, model: str = "gpt-4o-mini") -> str:
@@ -24,6 +29,6 @@ def llm_generate(context: str, question: str, model: str = "gpt-4o-mini") -> str
         model=model,
         messages=[{"role": "user", "content": prompt}],
         temperature=0.2,
-        max_tokens=350,
+        max_tokens=450,
     )
     return resp.choices[0].message.content.strip()

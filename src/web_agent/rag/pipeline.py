@@ -16,6 +16,7 @@ class RAGpipeline:
         q = question.lower()
         words = re.findall(r"\w+", q)
         if not words:
+            log.info("empty_question")
             return "Ask me something :)"
 
         # tu retrieval actual (no lo tocamos)

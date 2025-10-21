@@ -6,6 +6,7 @@ from pypdf import PdfReader
 import logging
 log = logging.getLogger(__name__)
 
+
 def read_pdf_text(path: Path) -> str:
     reader = PdfReader(str(path))
     return "\n".join((page.extract_text() or "") for page in reader.pages)
