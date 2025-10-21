@@ -3,7 +3,8 @@ from typing import List, Tuple
 import csv
 import openpyxl
 from pypdf import PdfReader
-
+import logging
+log = logging.getLogger(__name__)
 
 def read_pdf_text(path: Path) -> str:
     reader = PdfReader(str(path))
@@ -57,6 +58,7 @@ def read_workstories_xlsx(path: Path) -> List[Tuple[str, str]]:
 
 
 def load_docs(data_dir: str = "data") -> List[Tuple[str, str]]:
+    log.info(f"Cargando documentos desde el directorio: {data_dir}")
     p = Path(data_dir)
     docs: List[Tuple[str, str]] = []
 

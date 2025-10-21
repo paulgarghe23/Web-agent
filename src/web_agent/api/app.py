@@ -19,6 +19,3 @@ def health():
 @app.post("/ask")
 def ask(body:AskIn):
     return {"answer": pipeline.answer(body.question)}
-
-
-

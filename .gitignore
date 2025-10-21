@@ -19,6 +19,9 @@ data/
 *.csv
 *.xlsx
 *.pdf
+tests/_artifacts/
+debug.log
+
 
 # Tests cache
 .pytest_cache/
