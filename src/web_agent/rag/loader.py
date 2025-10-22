@@ -73,4 +73,9 @@ def load_docs(data_dir: str = "data") -> List[Tuple[str, str]]:
     if xlsx.exists():
         docs.extend(read_workstories_xlsx(xlsx))
 
+    # Context.md
+    context_md = p / "context.md"
+    if context_md.exists():
+        docs.append(("context", context_md.read_text(encoding="utf-8")))
+
     return docs
