@@ -3,7 +3,6 @@ name = "web-agent"
 version = "0.1.0"
 description = ""
 authors = ["Paul G <paulgarghe23@gmail.com>"]
-readme = "README.md"
 packages = [{ include = "web_agent", from = "src" }]
 
 [tool.poetry.dependencies]

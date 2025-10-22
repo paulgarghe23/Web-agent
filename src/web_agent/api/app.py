@@ -8,10 +8,17 @@ app = FastAPI(title="Web Agent API")
 # Configurar CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080"],  # Puerto de tu frontend
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=[
+        "https://paulgarghe.com",
+        "https://www.paulgarghe.com",
+        "https://agent.paulgarghe.com",
+        "http://localhost:5173",
+    ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_methods=["GET","POST","OPTIONS"],
     allow_headers=["*"],
+    allow_credentials=False,  # pon True solo si usas cookies/autenticación
+    max_age=86400,
 )
 pipeline = RAGpipeline()
 
