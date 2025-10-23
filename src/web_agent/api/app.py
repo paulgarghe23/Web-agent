@@ -33,6 +33,14 @@ def root():
 def health():
     return {"status": "ok"}
 
+@app.get("/debug")
+def debug():
+    return {
+        "docs_count": len(pipeline.docs),
+        "embeddings_count": len(pipeline.doc_embeddings),
+        "doc_titles": [title for title, _ in pipeline.docs]
+    }
+
 @app.post("/ask")
 def ask(body:AskIn):
     return {"answer": pipeline.answer(body.question)}

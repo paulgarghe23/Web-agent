@@ -10,11 +10,15 @@ log = logging.getLogger(__name__)
 class RAGpipeline:
     def __init__(self) -> None:
         self.docs: List[Tuple[str, str]] = load_docs("data")
+        log.info(f"pipeline.__init__: docs loaded={len(self.docs)}")
+        for i, (title, text) in enumerate(self.docs):
+            log.info(f"pipeline.__init__: doc[{i}] title='{title}' text_length={len(text)}")
+        
         # Pre-compute embeddings for all documents
         self.doc_embeddings: List[List[float]] = []
         for _, text in self.docs:
             self.doc_embeddings.append(get_embedding(text))
-        log.info(f"pipeline.__init__: docs={len(self.docs)}")
+        log.info(f"pipeline.__init__: embeddings computed={len(self.doc_embeddings)}")
 
     def _cosine_similarity(self, a: List[float], b: List[float]) -> float:
         """Calculate cosine similarity between two vectors."""
