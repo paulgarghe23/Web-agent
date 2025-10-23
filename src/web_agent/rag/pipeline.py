@@ -37,6 +37,9 @@ class RAGpipeline:
         
         scored.sort(reverse=True)
 
+        if not scored:
+            return "Based on the context and information I have been provided until now, I don't know."
+            
         best_score, _, _ = scored[0]
         if best_score <= 0.3:  # Threshold for relevance
             return "Based on the context and information I have been provided until now, I don't know."
