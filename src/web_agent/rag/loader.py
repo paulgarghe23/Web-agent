@@ -4,6 +4,8 @@ import csv
 import openpyxl
 from pypdf import PdfReader
 import logging
+from web_agent.storage.r2_loader import download_files_from_r2
+
 log = logging.getLogger(__name__)
 
 
@@ -58,8 +60,12 @@ def read_workstories_xlsx(path: Path) -> List[Tuple[str, str]]:
     return stories
 
 
-def load_docs(data_dir: str = "data") -> List[Tuple[str, str]]:
-    log.info(f"Cargando documentos desde el directorio: {data_dir}")
+def load_docs(data_dir: str = "/tmp/data") -> List[Tuple[str, str]]:
+    # First, download files from R2
+    log.info("load_docs: downloading files from R2...")
+    download_files_from_r2(target_dir=data_dir)
+    
+    log.info(f"load_docs: loading documents from {data_dir}")
     p = Path(data_dir)
     docs: List[Tuple[str, str]] = []
 
