@@ -13,4 +13,5 @@ RUN touch /app/src/web_agent/__init__.py
 RUN pip install --no-cache-dir poetry && poetry config virtualenvs.create false && poetry install --only main
 
 EXPOSE 8000
-CMD ["uvicorn", "web_agent.api.app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python","-m","uvicorn","web_agent.api.app:app","--host","0.0.0.0","--port","8000","--proxy-headers"]
+
