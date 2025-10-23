@@ -9,9 +9,6 @@ __pycache__/
 *.egg-info/
 .vscode/
 .idea/
-*.csv
-*.xlsx
-*.pdf
 tests/_artifacts/
 debug.log
 .pytest_cache/
