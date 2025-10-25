@@ -1,6 +1,9 @@
 import re
 import logging
 import numpy as np
+import json
+import os
+from pathlib import Path
 from typing import List, Tuple
 from .loader import load_docs
 from web_agent.llm.generate import llm_generate, get_embedding
@@ -14,11 +17,62 @@ class RAGpipeline:
         for i, (title, text) in enumerate(self.docs):
             log.info(f"pipeline.__init__: doc[{i}] title='{title}' text_length={len(text)}")
         
-        # Pre-compute embeddings for all documents
-        self.doc_embeddings: List[List[float]] = []
+        # Try to load cached embeddings first
+        self.doc_embeddings: List[List[float]] = self._load_or_compute_embeddings()
+        log.info(f"pipeline.__init__: embeddings loaded/computed={len(self.doc_embeddings)}")
+    
+    def _get_cache_path(self) -> Path:
+        """Get the path for the embeddings cache file."""
+        return Path("data/embeddings_cache.json")
+    
+    def _load_embeddings_from_cache(self) -> List[List[float]]:
+        """Load embeddings from cache file."""
+        cache_path = self._get_cache_path()
+        if not cache_path.exists():
+            return []
+        
+        try:
+            with open(cache_path, 'r') as f:
+                cached_data = json.load(f)
+            
+            # Check if we have the right number of embeddings
+            if len(cached_data) == len(self.docs):
+                log.info("pipeline._load_embeddings_from_cache: loaded from cache")
+                return cached_data
+            else:
+                log.info(f"pipeline._load_embeddings_from_cache: cache mismatch (cached={len(cached_data)}, docs={len(self.docs)})")
+                return []
+        except Exception as e:
+            log.warning(f"pipeline._load_embeddings_from_cache: failed to load cache: {e}")
+            return []
+    
+    def _save_embeddings_to_cache(self, embeddings: List[List[float]]) -> None:
+        """Save embeddings to cache file."""
+        cache_path = self._get_cache_path()
+        try:
+            cache_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(cache_path, 'w') as f:
+                json.dump(embeddings, f)
+            log.info("pipeline._save_embeddings_to_cache: saved to cache")
+        except Exception as e:
+            log.warning(f"pipeline._save_embeddings_to_cache: failed to save cache: {e}")
+    
+    def _load_or_compute_embeddings(self) -> List[List[float]]:
+        """Load embeddings from cache or compute them if cache doesn't exist."""
+        # Try to load from cache first
+        cached_embeddings = self._load_embeddings_from_cache()
+        if cached_embeddings:
+            return cached_embeddings
+        
+        # If no cache, compute embeddings
+        log.info("pipeline._load_or_compute_embeddings: computing embeddings...")
+        embeddings = []
         for _, text in self.docs:
-            self.doc_embeddings.append(get_embedding(text))
-        log.info(f"pipeline.__init__: embeddings computed={len(self.doc_embeddings)}")
+            embeddings.append(get_embedding(text))
+        
+        # Save to cache for next time
+        self._save_embeddings_to_cache(embeddings)
+        return embeddings
 
     def _cosine_similarity(self, a: List[float], b: List[float]) -> float:
         """Calculate cosine similarity between two vectors."""
