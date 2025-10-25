@@ -28,12 +28,18 @@ class RAGpipeline:
     def _load_embeddings_from_cache(self) -> List[List[float]]:
         """Load embeddings from cache file."""
         cache_path = self._get_cache_path()
+        log.info(f"pipeline._load_embeddings_from_cache: checking cache at {cache_path}")
+        
         if not cache_path.exists():
+            log.info("pipeline._load_embeddings_from_cache: cache file does not exist")
             return []
         
         try:
             with open(cache_path, 'r') as f:
                 cached_data = json.load(f)
+            
+            log.info(f"pipeline._load_embeddings_from_cache: found {len(cached_data)} cached embeddings")
+            log.info(f"pipeline._load_embeddings_from_cache: current docs count: {len(self.docs)}")
             
             # Check if we have the right number of embeddings
             if len(cached_data) == len(self.docs):
@@ -49,11 +55,12 @@ class RAGpipeline:
     def _save_embeddings_to_cache(self, embeddings: List[List[float]]) -> None:
         """Save embeddings to cache file."""
         cache_path = self._get_cache_path()
+        log.info(f"pipeline._save_embeddings_to_cache: saving {len(embeddings)} embeddings to {cache_path}")
         try:
             cache_path.parent.mkdir(parents=True, exist_ok=True)
             with open(cache_path, 'w') as f:
                 json.dump(embeddings, f)
-            log.info("pipeline._save_embeddings_to_cache: saved to cache")
+            log.info(f"pipeline._save_embeddings_to_cache: saved to cache at {cache_path}")
         except Exception as e:
             log.warning(f"pipeline._save_embeddings_to_cache: failed to save cache: {e}")
     
