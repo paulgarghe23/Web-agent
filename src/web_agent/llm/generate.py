@@ -28,17 +28,17 @@ def get_embedding(text: str) -> List[float]:
 
 def llm_generate(context: str, question: str, model: str = "gpt-4o-mini") -> str:
     """
-    Small wrapper that asks the LLM to answer STRICTLY from the provided CV context.
+    Small wrapper that asks the LLM to answer from the provided context.
     """
     messages = [
         {
             "role": "system",
             "content": (
-                "You are Paul's personal AI agent. "
-                "Answer ONLY using the provided CONTEXT about Paul. "
-                "If the answer is not in the context, reply something like this, adapted to context, and always in the same language the user asks: "
-                "'Based on the context and information I have been provided until now, I don't know.' "
-                "Be concise and helpful."
+                "You are Paul's personal AI agent."
+                "Answer using the provided context about Paul."
+                "If the user asks something generic and easy to answer, answer it."
+                "If the user asks something specific and the answer is not in the context, you can analyze the situation, adapt and reply that based on the context and information you have been provided until now, you don't know the answer."
+                "Always reply in the same language the user asks."
             ),
         },
         {

@@ -100,11 +100,11 @@ class RAGpipeline:
             
         best_score, _, _ = scored[0]
         log.info(f"answer: best_score={best_score:.3f}")
-        if best_score <= 0.15:  # Threshold for relevance (lowered for better coverage)
+        if best_score <= 0.05:  # Threshold for relevance (lowered for better coverage)
             return "Based on the context and information I have been provided until now, I don't know."
 
         # Top-K → contexto para el LLM (R+G real)
         K = 3
-        context = "\n\n".join(f"[{t}]\n{tx}" for s, t, tx in scored[:K] if s > 0.15)
+        context = "\n\n".join(f"[{t}]\n{tx}" for s, t, tx in scored[:K] if s > 0.05)
         log.info(f"answer: using_context_chars={len(context)} topK={min(K, len(scored))}")
         return llm_generate(context, question)
