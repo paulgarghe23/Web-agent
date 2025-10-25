@@ -23,7 +23,7 @@ class RAGpipeline:
     
     def _get_cache_path(self) -> Path:
         """Get the path for the embeddings cache file."""
-        return Path("data/embeddings_cache.json")
+        return Path("/tmp/embeddings_cache.json")
     
     def _load_embeddings_from_cache(self) -> List[List[float]]:
         """Load embeddings from cache file."""
